@@ -4,6 +4,12 @@ import br.com.fiap.epictaskapi.model.Task;
 import br.com.fiap.epictaskapi.service.TaskService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +29,9 @@ public class TaskController {
 
 
     @GetMapping
-    public List<Task> getAll(){
-        return taskService.listAll();
+    @Cacheable("tasks")
+    public Page<Task> getAll(@PageableDefault(size = 5) Pageable paginacao){
+        return taskService.listAll(paginacao);
     }
 
     @PostMapping
@@ -46,6 +53,7 @@ public class TaskController {
     }
 
     @DeleteMapping("/{id}")
+    @CacheEvict(value = "tasks", allEntries = true)
     public ResponseEntity<Object> destroy(@PathVariable Long id){
         Optional<Task>  optional = taskService.findById(id);
         if(optional.isEmpty()){
