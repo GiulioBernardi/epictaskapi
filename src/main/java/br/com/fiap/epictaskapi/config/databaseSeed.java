@@ -19,6 +19,6 @@ public class databaseSeed implements CommandLineRunner{
                 new Task("Modelar o BD", "Modelar as tabelas do banco de dados", 100, 0),
                 new Task("Prototipar páginas web", "Prototipar telas para as páginas do front end", 400, 0),
                 new Task("Atualizar arquitetura", "atualizar arquitetura de backend dados", 55, 0)
-        ))
+        ));
     }
 }
