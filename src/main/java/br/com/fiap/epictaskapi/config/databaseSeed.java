@@ -1,7 +1,10 @@
 package br.com.fiap.epictaskapi.config;
 
 import br.com.fiap.epictaskapi.model.Task;
+import br.com.fiap.epictaskapi.model.Usuario;
+
 import br.com.fiap.epictaskapi.repository.TaskRepository;
+import br.com.fiap.epictaskapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -12,9 +15,14 @@ import java.util.List;
 public class databaseSeed implements CommandLineRunner{
 
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     TaskRepository repository;
     @Override
     public void run(String... args) throws Exception {
+        userRepository.save(new Usuario("Giulio", "giulio@gmail.com.br", "123"));
+
         repository.saveAll(List.of(
                 new Task("Modelar o BD", "Modelar as tabelas do banco de dados", 100, 0),
                 new Task("Prototipar páginas web", "Prototipar telas para as páginas do front end", 400, 0),
