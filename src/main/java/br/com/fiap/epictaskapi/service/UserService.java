@@ -16,6 +16,7 @@ public class UserService {
     private UserRepository userRepository;
     public Page<User> listAll(Pageable paginacao) {
         return userRepository.findAll(paginacao);
+//        return userRepository.findAllExcludingPassword(paginacao);
     }
 
     public User save(User user) {
