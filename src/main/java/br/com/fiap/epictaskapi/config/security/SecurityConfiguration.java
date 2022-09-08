@@ -34,4 +34,6 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
+
+    //TODO create standard admin user
 }
