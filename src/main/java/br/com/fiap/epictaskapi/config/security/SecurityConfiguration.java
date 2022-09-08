@@ -19,6 +19,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .antMatchers(HttpMethod.GET, "/api/task/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/task/").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/api/user/**").permitAll()
                 .anyRequest().denyAll()
                 .and()
                 .csrf().disable()
