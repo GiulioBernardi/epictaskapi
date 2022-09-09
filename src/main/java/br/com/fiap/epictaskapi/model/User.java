@@ -1,5 +1,6 @@
 package br.com.fiap.epictaskapi.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -27,6 +28,7 @@ public class User {
         return id;
     }
 
+    @JsonAlias(value = "id")
     public void setId(Long id) {
         this.id = id;
     }
@@ -52,7 +54,6 @@ public class User {
         return password;
     }
 
-    @JsonIgnore
     public void setPassword(String password) {
         this.password = password;
     }
