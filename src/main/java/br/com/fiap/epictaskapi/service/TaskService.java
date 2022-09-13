@@ -18,7 +18,6 @@ public class TaskService {
         return repository.findAll(paginacao);
     }
 
-
     public Task save(Task task) {
         return repository.save(task);
     }

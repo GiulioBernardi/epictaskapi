@@ -10,7 +10,4 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String username);
-
-    @Query(value = "SELECT u.id, u.name, u.email from User u")
-    Page<User> findAllExcludingPassword(Pageable pageable);
 }
