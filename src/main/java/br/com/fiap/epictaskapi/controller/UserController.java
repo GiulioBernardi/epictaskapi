@@ -6,15 +6,15 @@ import br.com.fiap.epictaskapi.model.User;
 import br.com.fiap.epictaskapi.service.AuthenticationService;
 import br.com.fiap.epictaskapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -40,13 +40,7 @@ public class UserController {
     }
 
 
-    //remover
-    @GetMapping("/detalhes/{email}")
-    public UserDetails getget(@PathVariable String email){
-        return authService.loadUserByUsername(email);
-    }
-
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<Optional<UserDTO>> show(@PathVariable Long id){
         Optional<UserDTO> userFromDb = userService.findById(id).stream().map(mapper::toDto).findFirst();
         if(userFromDb.isEmpty()){
@@ -55,8 +49,7 @@ public class UserController {
         return ResponseEntity.ok(userFromDb);
     }
 
-    @DeleteMapping("/{id}")
-    @CacheEvict(value="users", allEntries = true)
+    @DeleteMapping("{id}")
     public ResponseEntity<Object> destroy(@PathVariable Long id){
         Optional<User> userFromDb = userService.findById(id);
         if(userFromDb.isEmpty()){
@@ -73,7 +66,6 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    @CacheEvict(value="users", allEntries = true)
     public ResponseEntity<UserDTO> update(@PathVariable Long id, @RequestBody @Valid UserDTO updatedUser){
         Optional<User> userFromDb = userService.findById(id);
         if(userFromDb.isEmpty()) {
@@ -87,4 +79,5 @@ public class UserController {
         userService.update(user);
         return ResponseEntity.ok(updatedUser);
     }
+
 }
