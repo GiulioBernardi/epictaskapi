@@ -8,24 +8,31 @@ import br.com.fiap.epictaskapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
 @Configuration
 public class databaseSeed implements CommandLineRunner{
 
-
     @Autowired
     TaskRepository taskRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
     @Override
     public void run(String... args) throws Exception {
-        userRepository.save(new User(
-                "Giulio",
-                "giulio@gmail.com.br",
-                "$2a$12$jap2n.dBmZZU5gy2782seex8r9KMRkgb/kn0FhKQ.7dskQMdSAFRO"));
-
+        userRepository.save(new User()
+                .name("Admin")
+                .email("admin@fiap.com.br")
+                .password(passwordEncoder.encode("administrador"))
+        );
+        userRepository.save( new User()
+                .name("Giulio")
+                .email("giulio@fiap.com")
+                .password(passwordEncoder.encode("1234"))
+        );
         taskRepository.saveAll(List.of(
                 new Task("Modelar o BD", "Modelar as tabelas do banco de dados", 100, 0),
                 new Task("Prototipar páginas web", "Prototipar telas para as páginas do front end", 400, 0),

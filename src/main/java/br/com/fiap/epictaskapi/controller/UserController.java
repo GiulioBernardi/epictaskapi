@@ -3,18 +3,16 @@ package br.com.fiap.epictaskapi.controller;
 import br.com.fiap.epictaskapi.dto.UserDTO;
 import br.com.fiap.epictaskapi.dto.mapper.MapperUserDTO;
 import br.com.fiap.epictaskapi.model.User;
+import br.com.fiap.epictaskapi.service.AuthenticationService;
 import br.com.fiap.epictaskapi.service.UserService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jta.atomikos.AtomikosProperties;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,13 +20,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
-
 
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
 
+    @Autowired
+    private AuthenticationService authService;
     @Autowired
     private UserService userService;
 
@@ -36,13 +34,13 @@ public class UserController {
     private MapperUserDTO mapper;
 
     @GetMapping
-    @Cacheable("users")
-    public Page<UserDTO> getAll(@PageableDefault(size = 3) Pageable paginacao){
+    public Page<UserDTO> getAll(@PageableDefault(size = 5) Pageable paginacao){
         List<UserDTO> users = userService.listAll(paginacao).stream().map(mapper::toDto).collect(Collectors.toList());
         return new PageImpl<>(users);
     }
 
-    @GetMapping("/{id}")
+
+    @GetMapping("{id}")
     public ResponseEntity<Optional<UserDTO>> show(@PathVariable Long id){
         Optional<UserDTO> userFromDb = userService.findById(id).stream().map(mapper::toDto).findFirst();
         if(userFromDb.isEmpty()){
@@ -51,9 +49,7 @@ public class UserController {
         return ResponseEntity.ok(userFromDb);
     }
 
-
-    @DeleteMapping("/{id}")
-    @CacheEvict(value="users", allEntries = true)
+    @DeleteMapping("{id}")
     public ResponseEntity<Object> destroy(@PathVariable Long id){
         Optional<User> userFromDb = userService.findById(id);
         if(userFromDb.isEmpty()){
@@ -69,16 +65,19 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
-
     @PutMapping("/{id}")
-    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody @Valid User updatedUser){
+    public ResponseEntity<UserDTO> update(@PathVariable Long id, @RequestBody @Valid UserDTO updatedUser){
         Optional<User> userFromDb = userService.findById(id);
-        if(userFromDb.isEmpty()){
+        if(userFromDb.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         User user = userFromDb.get();
-        BeanUtils.copyProperties(updatedUser, user);
+        user.setName(updatedUser.getName());
+        user.setEmail(updatedUser.getEmail());
+        user.setPassword(userFromDb.get().getPassword());
+
         userService.update(user);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(updatedUser);
     }
+
 }

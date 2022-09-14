@@ -1,8 +1,14 @@
 package br.com.fiap.epictaskapi.dto;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
 public class UserDTO {
     private Long id;
+    @NotBlank
     private String name;
+
+    @Email
     private String email;
 
     public UserDTO(Long id, String name, String email) {
