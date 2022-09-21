@@ -24,6 +24,7 @@ public class SecurityConfiguration {
                 .antMatchers(HttpMethod.PUT, "/api/user/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/user/**").authenticated()
                 .antMatchers(HttpMethod.GET, "/grupo").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/auth").permitAll()
                 .anyRequest().denyAll()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
