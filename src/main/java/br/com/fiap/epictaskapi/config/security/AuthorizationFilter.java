@@ -1,5 +1,6 @@
 package br.com.fiap.epictaskapi.config.security;
 
+import antlr.Token;
 import br.com.fiap.epictaskapi.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -10,18 +11,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class AuthorizationFilter extends OncePerRequestFilter {
 
-    @Autowired
-    TokenService service;
+public class AuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String header = request.getHeader("Authorization");
 
-        if(service.valide(header)){
-            //TODO autenticar
+        if(new TokenService().valide(header)){
+            System.out.println("Autenticado");
+        }else{
+            System.out.println("Não autenticado");
         }
         filterChain.doFilter(request, response);
     }
