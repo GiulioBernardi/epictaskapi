@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,5 +33,9 @@ public class TaskService {
 
     public void update(Task task){
         repository.save(task);
+    }
+
+    public List<Task> listAll() {
+        return repository.findAll();
     }
 }
