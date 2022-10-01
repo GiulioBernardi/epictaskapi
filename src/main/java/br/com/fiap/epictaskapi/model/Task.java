@@ -15,7 +15,7 @@ import java.util.Objects;
 public class Task{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     @NotBlank
     private String title;
