@@ -22,7 +22,7 @@ public class SecurityConfiguration {
 //                .and()
                 .authorizeHttpRequests()
                 .antMatchers(HttpMethod.GET, "/api/task/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/task").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/task").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/user/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/user").permitAll()
                 .antMatchers(HttpMethod.PUT, "/api/user/**").authenticated()
